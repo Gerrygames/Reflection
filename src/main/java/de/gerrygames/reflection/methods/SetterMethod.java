@@ -13,8 +13,8 @@ public class SetterMethod<C, T> extends ReflectedMethod {
 		super(handle);
 	}
 
-	public static <C, T> SetterMethod<C, T> create(Class<? extends C> owner, String fieldName) {
-		Field field = ReflectionUtils.findAnyField(owner, fieldName);
+	public static <C, T> SetterMethod<C, T> create(Class<? extends C> owner, String fieldName, Class<T> fieldType) {
+		Field field = ReflectionUtils.findAnyField(owner, fieldName, fieldType);
 
 		if (field != null && !Modifier.isStatic(field.getModifiers())) {
 			ReflectionUtils.setAccessible(field);

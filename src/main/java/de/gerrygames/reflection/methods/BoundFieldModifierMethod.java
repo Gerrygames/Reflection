@@ -13,8 +13,8 @@ public class BoundFieldModifierMethod<C, T> {
 		this.setter = setter;
 	}
 
-	public static <C, T> BoundFieldModifierMethod<C, T> create(Class<? extends C> owner, String fieldName) {
-		return new BoundFieldModifierMethod<>(ReflectionFactory.newStaticGetterMethod(owner, fieldName), ReflectionFactory.newStaticSetterMethod(owner, fieldName));
+	public static <C, T> BoundFieldModifierMethod<C, T> create(Class<? extends C> owner, String fieldName, Class<T> fieldType) {
+		return new BoundFieldModifierMethod<>(ReflectionFactory.newStaticGetterMethod(owner, fieldType, fieldName), ReflectionFactory.newStaticSetterMethod(owner, fieldType, fieldName));
 	}
 
 	public void modify(Function<T, T> function) {

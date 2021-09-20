@@ -13,8 +13,8 @@ public class StaticGetterMethod<C, T> extends ReflectedMethod implements IBoundG
 		super(handle);
 	}
 
-	public static <C, T> StaticGetterMethod<C, T> create(Class<? extends C> owner, String fieldName) {
-		Field field = ReflectionUtils.findAnyField(owner, fieldName);
+	public static <C, T> StaticGetterMethod<C, T> create(Class<? extends C> owner, String fieldName, Class<T> fieldType) {
+		Field field = ReflectionUtils.findAnyField(owner, fieldName, fieldType);
 
 		if (field != null && Modifier.isStatic(field.getModifiers())) {
 			ReflectionUtils.setAccessible(field);

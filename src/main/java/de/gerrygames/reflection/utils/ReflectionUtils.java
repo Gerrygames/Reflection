@@ -159,11 +159,19 @@ public class ReflectionUtils {
 	}
 
 	public static Field findAnyField(Class<?> owner, String name) {
+		return findAnyField(owner, name, null);
+	}
+
+	public static Field findAnyField(Class<?> owner, Class<?> type) {
+		return findAnyField(owner, null, type);
+	}
+
+	public static Field findAnyField(Class<?> owner, String name, Class<?> type) {
 		Field field;
 
-		if ((field = findField(owner, name)) != null) {
+		if ((field = findField(owner, name, type)) != null) {
 			;
-		} else if ((field = findDeclaredField(owner, name)) != null) {
+		} else if ((field = findDeclaredField(owner, name, type)) != null) {
 			;
 		}
 
@@ -171,23 +179,66 @@ public class ReflectionUtils {
 	}
 
 	public static Field findDeclaredField(Class<?> owner, String name) {
-		Field Field;
+		return findDeclaredField(owner, name, null);
+	}
 
-		do {
-			try {
-				Field = owner.getDeclaredField(name);
-				return Field;
-			} catch (NoSuchFieldException ignored) {}
-		} while ((owner = owner.getSuperclass()) != null);
+	public static Field findDeclaredField(Class<?> owner, Class<?> type) {
+		return findDeclaredField(owner, null, type);
+	}
+
+	public static Field findDeclaredField(Class<?> owner, String name, Class<?> type) {
+		if (name != null) {
+			Class<?> current = owner;
+			do {
+				try {
+					Field field = current.getDeclaredField(name);
+					if (type == null || type.isAssignableFrom(field.getType())) {
+						return field;
+					}
+				} catch (NoSuchFieldException ignored) {}
+			} while ((current = current.getSuperclass()) != null);
+		}
+
+		if (type != null) {
+			Class<?> current = owner;
+			do {
+				for (Field field : current.getDeclaredFields()) {
+					if (type.isAssignableFrom(field.getType()) && (name == null || field.getName().equals(name))) {
+						return field;
+					}
+				}
+			} while ((current = current.getSuperclass()) != null);
+		}
 
 		return null;
 	}
 
 	public static Field findField(Class<?> owner, String name) {
-		try {
-			return owner.getField(name);
-		} catch (NoSuchFieldException ignored) {
-			return null;
+		return findField(owner, name, null);
+	}
+
+	public static Field findField(Class<?> owner, Class<?> type) {
+		return findField(owner, null, type);
+	}
+
+	public static Field findField(Class<?> owner, String name, Class<?> type) {
+		if (name != null) {
+			try {
+				Field field = owner.getField(name);
+				if (type == null || type.isAssignableFrom(field.getType())) {
+					return field;
+				}
+			} catch (NoSuchFieldException ignored) {}
 		}
+
+		if (type != null) {
+			for (Field field : owner.getFields()) {
+				if (type.isAssignableFrom(field.getType()) && (name == null || field.getName().equals(name))) {
+					return field;
+				}
+			}
+		}
+
+		return null;
 	}
 }

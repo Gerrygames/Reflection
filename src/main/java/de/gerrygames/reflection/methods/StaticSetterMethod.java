@@ -13,8 +13,8 @@ public class StaticSetterMethod<C, T> extends ReflectedMethod implements IBoundS
 		super(handle);
 	}
 
-	public static <C, T> StaticSetterMethod<C, T> create(Class<? extends C> owner, String fieldName) {
-		Field field = ReflectionUtils.findAnyField(owner, fieldName);
+	public static <C, T> StaticSetterMethod<C, T> create(Class<? extends C> owner, String fieldName, Class<T> fieldType) {
+		Field field = ReflectionUtils.findAnyField(owner, fieldName, fieldType);
 
 		if (field != null && Modifier.isStatic(field.getModifiers())) {
 			ReflectionUtils.setAccessible(field);
@@ -27,7 +27,6 @@ public class StaticSetterMethod<C, T> extends ReflectedMethod implements IBoundS
 
 		return null;
 	}
-
 
 	public void invoke(T value) {
 		this.set(value);

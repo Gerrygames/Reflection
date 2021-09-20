@@ -13,9 +13,9 @@ public class FieldModifierMethod<C, T> {
 		this.setter = setter;
 	}
 
-	public static <C, T> FieldModifierMethod<C, T> create(Class<? extends C> owner, String fieldName) {
-		GetterMethod<C, T> getter = ReflectionFactory.newGetterMethod(owner, fieldName);
-		SetterMethod<C, T> setter = ReflectionFactory.newSetterMethod(owner, fieldName);
+	public static <C, T> FieldModifierMethod<C, T> create(Class<? extends C> owner, String fieldName, Class<T> fieldType) {
+		GetterMethod<C, T> getter = ReflectionFactory.newGetterMethod(owner, fieldType, fieldName);
+		SetterMethod<C, T> setter = ReflectionFactory.newSetterMethod(owner, fieldType, fieldName);
 		if (setter != null || getter != null) {
 			return new FieldModifierMethod<>(getter, setter);
 		} else {

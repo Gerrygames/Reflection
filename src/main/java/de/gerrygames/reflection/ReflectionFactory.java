@@ -57,50 +57,74 @@ public class ReflectionFactory {
 	}
 
 	public static <C, T> GetterMethod<C, T> newGetterMethod(Class<? extends C> owner, String name) {
-		return GetterMethod.create(owner, name);
+		return newGetterMethod(owner, null, name);
+	}
+
+	public static <C, T> GetterMethod<C, T> newGetterMethod(Class<? extends C> owner, Class<T> type) {
+		return newGetterMethod(owner, type, null);
 	}
 
 	public static <C, T> GetterMethod<C, T> newGetterMethod(Class<? extends C> owner, Class<T> type, String name) {
-		return GetterMethod.create(owner, name);
+		return GetterMethod.create(owner, name, type);
 	}
 
 	public static <C, T> SetterMethod<C, T> newSetterMethod(Class<? extends C> owner, String name) {
-		return SetterMethod.create(owner, name);
+		return newSetterMethod(owner, null, name);
+	}
+
+	public static <C, T> SetterMethod<C, T> newSetterMethod(Class<? extends C> owner, Class<T> type) {
+		return newSetterMethod(owner, type, null);
 	}
 
 	public static <C, T> SetterMethod<C, T> newSetterMethod(Class<? extends C> owner, Class<T> type, String name) {
-		return SetterMethod.create(owner, name);
+		return SetterMethod.create(owner, name, type);
 	}
 
 	public static <C, T> FieldModifierMethod<C, T> newFieldModifier(Class<? extends C> owner, String name) {
-		return FieldModifierMethod.create(owner, name);
+		return newFieldModifier(owner, null, name);
+	}
+
+	public static <C, T> FieldModifierMethod<C, T> newFieldModifier(Class<? extends C> owner, Class<T> type) {
+		return newFieldModifier(owner, type, null);
 	}
 
 	public static <C, T> FieldModifierMethod<C, T> newFieldModifier(Class<? extends C> owner, Class<T> type, String name) {
-		return FieldModifierMethod.create(owner, name);
+		return FieldModifierMethod.create(owner, name, type);
 	}
 
 	public static <C, T> BoundFieldModifierMethod<C, T> newStaticFieldModifier(Class<? extends C> owner, String name) {
-		return BoundFieldModifierMethod.create(owner, name);
+		return newStaticFieldModifier(owner, null, name);
+	}
+
+	public static <C, T> BoundFieldModifierMethod<C, T> newStaticFieldModifier(Class<? extends C> owner, Class<T> type) {
+		return newStaticFieldModifier(owner, type, null);
 	}
 
 	public static <C, T> BoundFieldModifierMethod<C, T> newStaticFieldModifier(Class<? extends C> owner, Class<T> type, String name) {
-		return BoundFieldModifierMethod.create(owner, name);
+		return BoundFieldModifierMethod.create(owner, name, type);
 	}
 
 	public static <C, T> StaticGetterMethod<C, T> newStaticGetterMethod(Class<? extends C> owner, String name) {
-		return StaticGetterMethod.create(owner, name);
+		return newStaticGetterMethod(owner, null, name);
+	}
+
+	public static <C, T> StaticGetterMethod<C, T> newStaticGetterMethod(Class<? extends C> owner, Class<T> type) {
+		return newStaticGetterMethod(owner, type, null);
 	}
 
 	public static <C, T> StaticGetterMethod<C, T> newStaticGetterMethod(Class<? extends C> owner, Class<T> type, String name) {
-		return StaticGetterMethod.create(owner, name);
+		return StaticGetterMethod.create(owner, name, type);
 	}
 
 	public static <C, T> StaticSetterMethod<C, T> newStaticSetterMethod(Class<? extends C> owner, String name) {
-		return StaticSetterMethod.create(owner, name);
+		return newStaticSetterMethod(owner, null, name);
+	}
+
+	public static <C, T> StaticSetterMethod<C, T> newStaticSetterMethod(Class<? extends C> owner, Class<T> type) {
+		return newStaticSetterMethod(owner, type, null);
 	}
 
 	public static <C, T> StaticSetterMethod<C, T> newStaticSetterMethod(Class<? extends C> owner, Class<T> type, String name) {
-		return StaticSetterMethod.create(owner, name);
+		return StaticSetterMethod.create(owner, name, type);
 	}
 }
