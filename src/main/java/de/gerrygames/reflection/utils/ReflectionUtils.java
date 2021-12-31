@@ -225,7 +225,7 @@ public class ReflectionUtils {
 		if (name != null) {
 			try {
 				Field field = owner.getField(name);
-				if (type == null || type.isAssignableFrom(field.getType())) {
+				if (type == null || matchType(type, field.getType())) {
 					return field;
 				}
 			} catch (NoSuchFieldException ignored) {}
@@ -233,12 +233,34 @@ public class ReflectionUtils {
 
 		if (type != null) {
 			for (Field field : owner.getFields()) {
-				if (type.isAssignableFrom(field.getType()) && (name == null || field.getName().equals(name))) {
+				if (matchType(type, field.getType()) && (name == null || field.getName().equals(name))) {
 					return field;
 				}
 			}
 		}
 
 		return null;
+	}
+
+	private static boolean matchType(Class<?> wanted, Class<?> got) {
+		if (wanted.isAssignableFrom(got)) return true;
+
+		if (wanted == Integer.class) {
+			return got == Integer.class || got == int.class;
+		} else if (wanted == Double.class) {
+			return got == Integer.class || got == double.class;
+		} else if (wanted == Long.class) {
+			return got == Long.class || got == long.class;
+		} else if (wanted == Character.class) {
+			return got == Character.class || got == char.class;
+		} else if (wanted == Byte.class) {
+			return got == Byte.class || got == byte.class;
+		} else if (wanted == Float.class) {
+			return got == Float.class || got == float.class;
+		} else if (wanted == Boolean.class) {
+			return got == Boolean.class || got == boolean.class;
+		}
+
+		return false;
 	}
 }
