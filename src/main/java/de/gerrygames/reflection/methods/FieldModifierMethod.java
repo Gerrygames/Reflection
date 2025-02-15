@@ -2,6 +2,7 @@ package de.gerrygames.reflection.methods;
 
 import de.gerrygames.reflection.ReflectionFactory;
 
+import java.lang.reflect.Field;
 import java.util.function.Function;
 
 public class FieldModifierMethod<C, T> {
@@ -16,6 +17,16 @@ public class FieldModifierMethod<C, T> {
 	public static <C, T> FieldModifierMethod<C, T> create(Class<? extends C> owner, String fieldName, Class<T> fieldType) {
 		GetterMethod<C, T> getter = ReflectionFactory.newGetterMethod(owner, fieldType, fieldName);
 		SetterMethod<C, T> setter = ReflectionFactory.newSetterMethod(owner, fieldType, fieldName);
+		if (setter != null || getter != null) {
+			return new FieldModifierMethod<>(getter, setter);
+		} else {
+			return null;
+		}
+	}
+
+	public static <C, T> FieldModifierMethod<C, T> create(Field field) {
+		GetterMethod<C, T> getter = GetterMethod.create(field);
+		SetterMethod<C, T> setter = SetterMethod.create(field);
 		if (setter != null || getter != null) {
 			return new FieldModifierMethod<>(getter, setter);
 		} else {

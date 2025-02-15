@@ -14,8 +14,10 @@ public class GetterMethod<C, T> extends ReflectedMethod {
 	}
 
 	public static <C, T> GetterMethod<C, T> create(Class<? extends C> owner, String fieldName, Class<T> fieldType) {
-		Field field = ReflectionUtils.findAnyField(owner, fieldName, fieldType);
+		return create(ReflectionUtils.findAnyField(owner, fieldName, fieldType));
+	}
 
+	public static <C, T> GetterMethod<C, T> create(Field field) {
 		if (field != null && !Modifier.isStatic(field.getModifiers())) {
 			ReflectionUtils.setAccessible(field);
 

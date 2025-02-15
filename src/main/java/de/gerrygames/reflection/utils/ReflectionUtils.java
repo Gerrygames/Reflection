@@ -1,6 +1,9 @@
 package de.gerrygames.reflection.utils;
 
 import de.gerrygames.reflection.ReflectionFactory;
+import de.gerrygames.reflection.methods.FieldModifierMethod;
+import de.gerrygames.reflection.methods.GetterMethod;
+import de.gerrygames.reflection.methods.SetterMethod;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
@@ -68,17 +71,9 @@ public class ReflectionUtils {
 	}
 
 	public static void transferValue(Object source, Object target, String sourceField, String targetField) {
-		Field sf = findAnyField(source.getClass(), sourceField);
-		Field tf = findAnyField(target.getClass(), targetField);
-
-		setAccessible(sf);
-		setAccessible(tf);
-
-		if (Modifier.isFinal(tf.getModifiers())) setFieldNotFinal(tf);
-
-		try {
-			tf.set(target, sf.get(source));
-		} catch (IllegalAccessException ignored) {}
+		GetterMethod<Object, Object> getter = ReflectionFactory.newGetterMethod(source.getClass(), sourceField);
+		SetterMethod<Object, Object> setter = ReflectionFactory.newSetterMethod(target.getClass(), targetField);
+		setter.set(target, getter.get(source));
 	}
 
 	public static <E> Constructor<E> getEmptyConstructor(Class<E> clazz) {
@@ -95,9 +90,13 @@ public class ReflectionUtils {
 	}
 
 	public static <E> E getEmptyObject(Class<E> clazz) {
-		Constructor<E> constructor = getEmptyConstructor(clazz);
+		return getEmptyObject(getEmptyConstructor(clazz));
+	}
+
+	public static <E> E getEmptyObject(Constructor<E> constructor) {
+		if (constructor == null) return null;
 		try {
-			return clazz.cast(constructor.newInstance());
+			return constructor.newInstance();
 		} catch (InstantiationException | IllegalArgumentException | InvocationTargetException | IllegalAccessException ex) {
 			ex.printStackTrace();
 		}
@@ -106,25 +105,23 @@ public class ReflectionUtils {
 
 	public static <O, E extends O> E copyAndExtendObject(O object, Class<E> clazz) {
 		if (!object.getClass().isAssignableFrom(clazz)) throw new IllegalArgumentException(clazz.getName() + " is not compatible to " + object.getClass().getName());
+		return copyAndExtendObject(object, getEmptyConstructor(clazz));
+	}
 
-		E copy = getEmptyObject(clazz);
+	public static <O, E extends O> E copyAndExtendObject(O object, Constructor<E> emptyConstructor) {
+		E copy = getEmptyObject(emptyConstructor);
+		transferFields(object, copy);
+		return copy;
+	}
 
-		Class<?> current = object.getClass();
+	public static <O, E extends O> void transferFields(O source, E target) {
+		Class<?> current = source.getClass();
 		do {
-			for (Field f : current.getDeclaredFields()) {
-				int modifiers = f.getModifiers();
-				if (Modifier.isStatic(modifiers)) continue;
-				if (Modifier.isFinal(modifiers)) setFieldNotFinal(f);
-				setAccessible(f);
-				try {
-					f.set(copy, f.get(object));
-				} catch (IllegalAccessException ex) {
-					ex.printStackTrace();
-				}
+			for (Field field : current.getDeclaredFields()) {
+				FieldModifierMethod<Object, Object> modifier = FieldModifierMethod.create(field);
+				if (modifier != null) modifier.set(target, modifier.get(source));
 			}
 		} while (((current = current.getSuperclass()) != Object.class));
-
-		return copy;
 	}
 
 	public static Method findAnyMethod(Class<?> owner, String name, Class<?>... parameterTypes) {

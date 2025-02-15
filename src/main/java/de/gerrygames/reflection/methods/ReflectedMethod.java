@@ -1,14 +1,13 @@
 package de.gerrygames.reflection.methods;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.lang.invoke.MethodHandle;
 
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class ReflectedMethod {
-	@Getter
 	protected final MethodHandle handle;
-
-	protected ReflectedMethod(MethodHandle handle) {
-		this.handle = handle;
-	}
 }
